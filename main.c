@@ -23,16 +23,14 @@
 #define QUICK_DOIS "Quick-Sort-random"
 #define QUICK_TRES "Quick-Sort-median"
 #define QUICK_QUATRO "Quick-Sort-avarage"
+#define HEAP "Heap-Sort"
 
-/*
-Aluno: Lourival Teixeira de Sousa
-Matricula: 6012 
-*/
 
 int* aloc_array(int size) {
   return (int*) malloc(size * sizeof(int));
 }
 
+// cria pastas internas
 void create_nested_folders(char *path, char *sufix) {
   struct stat st = {0};
   char folder_name[30];
@@ -45,6 +43,36 @@ void create_nested_folders(char *path, char *sufix) {
     }
 }
 
+void heap_minimum(int *array, int size) {
+  build_min_heap(array, size);
+  printArray(array,size);
+  printf("O menor elemento e: %d\n",array[0]);
+}
+
+void heap_extract_min(int *array, int size) {
+  build_min_heap(array, size);
+  array[0] = NULL;
+  printArray(array,size);
+  heapfy(array,size,1);
+  printArray(array,size);
+}
+
+void heap_increase_key(int *array, int size) {
+  build_min_heap(array,size);
+  int pos;
+  printf("Digite a posicao que deseja inserir: \n");
+  printf("-> \n");
+  scanf("%d",&pos); 
+  array[pos] = 1000;
+
+}
+
+void max_heap_insert(int *array, int size) {
+  build_min_heap(array,size);
+  array[size - 1] = 1000;
+}
+
+// cria configuração inicial de pastas
 void create_folders_setup(char *folder_name) {
   struct stat st = {0};
   int size = DEZ;
@@ -74,7 +102,7 @@ void create_folders_setup(char *folder_name) {
 }
 
 
-
+// função que calcula tempo de execucção
 double  measure_time_of_exec(int *array, int array_size) {
   clock_t start, end;
   double time_of_exec;
@@ -93,7 +121,7 @@ int generate_random_number() {
   return rand();
 }
 
-
+// popula array em ordem crescente
 void populate_array_ASC_order(int *array,int array_size) {
   int seed = generate_random_number();
   int i;
@@ -102,6 +130,7 @@ void populate_array_ASC_order(int *array,int array_size) {
   }
 }
 
+//popula array em ordem descrescente
 void populate_array_DESC_order(int *array,int array_size) {
   int seed = generate_random_number();
   int i;
@@ -111,6 +140,7 @@ void populate_array_DESC_order(int *array,int array_size) {
   }
 }
 
+// ordem randomica
 void populate_array_RAND_order(int *array,int array_size) {
   int i;
   int seed = generate_random_number();
@@ -314,6 +344,41 @@ void measure_quick_sort_avarage(int *array, int array_size, char order) {
   save_file_time_exec(time_of_exec, array_size, order,"Quick-sort-avarage/");
 }
 
+void measure_heap_sort(int *array, int array_size, char order) {
+  clock_t start, end;
+  double time_of_exec;
+  printf("Vetor Original: \n");
+  printArray(array,array_size);
+  save_file(array, array_size, order, "entrada","Heap-Sort/");
+  start = clock();
+  heap_sort(array,array_size);
+  end = clock();
+  printf("Chamado o Heapsort: \n");
+  printArray(array,array_size);
+  time_of_exec = (double)(end - start) / CLOCKS_PER_SEC;
+  save_file(array, array_size, order, "saida","Heap-Sort/");
+  save_file_time_exec(time_of_exec, array_size, order,"Heap-Sort/");
+}
+
+void call_heap_functs(int opt, int *array, int size) {
+  switch(opt) {
+    case 1:
+      heap_minimum(array, size);
+      break;
+    case 2:
+      heap_extract_min(array, size);
+      break;
+    case 3:
+      heap_increase_key(array, size);
+      break;
+    case 4:
+      max_heap_insert(array,size);
+      break;
+    default:
+      break;
+  }
+}
+
 int main () {
   create_folders_setup(INSERTION);
   create_folders_setup(BUBBLE);
@@ -324,6 +389,7 @@ int main () {
   create_folders_setup(QUICK_DOIS);
   create_folders_setup(QUICK_TRES);
   create_folders_setup(QUICK_QUATRO);
+  create_folders_setup(HEAP);
 
   int *array, array_size, test_option;
   char order;
@@ -332,6 +398,13 @@ int main () {
   if(algorithm == 0) {
     return 0;
   }
+  
+  int heap_opt = 0;
+
+  if(algorithm == 10) {
+    heap_opt = get_heap_functs_option();
+  }
+
   array_size = get_array_size();
   if(array_size == 0) {
     printf("Saindo...");
@@ -362,6 +435,10 @@ int main () {
       break;
   }
 
+  if(heap_opt) {
+    call_heap_functs(heap_opt, array, array_size);
+  }
+
    switch (algorithm) {
     case 1:
       measure_insertion_sort(array,array_size,order);
@@ -389,6 +466,9 @@ int main () {
       break;
     case 9: 
       measure_quick_sort_avarage(array,array_size,order);
+      break;
+    case 10:
+      measure_heap_sort(array,array_size,order);
       break;
     default:
       break;

@@ -66,6 +66,7 @@ int get_algorithm_option() {
     printf("-> Quick-sort-Random:  [7]\n");
     printf("-> Quick-sort-Mediana: [8]\n");
     printf("-> Quick-sort-Media:   [9]\n");
+    printf("-> Heap-sort:          [10]\n");
     printf("-> Sair:               [0]\n");
     printf("<----------------------------------------------------------------------->\n");
     printf("-> ");
@@ -123,4 +124,26 @@ int get_array_size() {
     default:
       break;
   }
+}
+
+int get_heap_functs_option() {
+  system("cls || clear");
+  int option;
+    do {
+      printf("                                 HEAP-SORT                                \n");
+      printf("<----------------------------------------------------------------------->\n");
+      printf("Escolha a funcao do heap-sort que deseja testar: \n");
+      printf("-> 1- Heap Minimum\n");
+      printf("-> 2- Heap extract min\n");
+      printf("-> 3- Heap increase key\n");
+      printf("-> 4- Max heap insert\n");
+      printf("-> 0- Nenhum\n");
+      printf("<----------------------------------------------------------------------->\n");
+      printf("-> ");
+      scanf("%d",&option);
+      if(option < 0 && option > 4) {
+        printf("Escolha uma opcao valida!\n");
+      }
+    } while( option < 0 && option > 4 );
+  return option;
 }

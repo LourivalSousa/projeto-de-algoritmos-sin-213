@@ -181,6 +181,7 @@ void quick_sort_version_one(int *array, int low, int high)
 int partition_median(int *array, int low, int high)
 {   
     int size = sizeof(array) / sizeof(int);
+    printf("%d\n",size);
     int median = ((size/2) + (size/2-1)) / 2 ;
     int temp = array[median];
     array[median] = array[low];
@@ -295,24 +296,20 @@ void quick_sort_random_pivot(int *array, int low, int high)
 
 // algoritmos do heap sort
 
-void heap_sort(int *array, int size) {
-  
-  build_min_heap(array,size)
-
-  for (int i = size - 1; i >= 0; i--) {
-    swap(&arr[0], &arr[i]);
-    heapfy(arr, i, 0);
+void printArray(int *arr, int N) {
+  if(N > 1000) {
+    char op;
+    printf("Este vetor possui muitos elementos para imprimir na tela!!!\nDeseja exibir mesmo assim? (s/n) \n");
+    op = getchar();
+    if(op == 'n' || op == 'N') return;
   }
+  for (int i = 0; i < N; i++) {
+    printf("%d ", arr[i]);
+  }
+  printf("\n");
 }
 
-void build_min_heap(int *array, int size) {
-  int i;
-  for (i = size / 2 - 1; i >= 0; i--) {
-    heapfy(arr, size, i);
-  } 
-}
-
-void heapfy(int *array, int size, int index) {
+void heapfy(int *array, int size, int i) {
 
   int smallest = i;
 
@@ -320,16 +317,40 @@ void heapfy(int *array, int size, int index) {
 
   int right = 2 * i + 2;
   
-  if (left < size && arr[left] < arr[smallest]) {
+  if (left < size && array[left] < array[smallest]) {
     smallest = left;
   }
 
-  if (right < size && arr[right] < arr[smallest]) {
+  if (right < size && array[right] < array[smallest]) {
     smallest = right;
   }
 
   if (smallest != i) {
-    swap(&arr[i], &arr[smallest]);
-    heapfy(arr, N, smallest);
+    swap(&array[i], &array[smallest]);
+    heapfy(array, size, smallest);
   }
 }
+
+void build_min_heap(int *array, int size) {
+  int i;
+  for (i = size / 2 - 1; i >= 0; i--) {
+    heapfy(array, size, i);
+  } 
+}
+
+void heap_sort(int *array, int size) {
+  
+  build_min_heap(array,size);
+  printf("Chamando a build min heap: \n");
+  printArray(array,size);
+
+  int i;
+  for (i = size - 1; i >= 0; i--) {
+    swap(&array[0], &array[i]);
+    heapfy(array, i, 0);
+  }
+}
+
+
+
+
